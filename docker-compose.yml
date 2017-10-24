@@ -1,0 +1,33 @@
+version: '3'
+services:
+  rabbitmq:
+    image: "rabbitmq:3.6.12-management"
+    hostname: "rabbitmq"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  web:
+    build: .
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    volumes:
+      - ./code:/web
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+    ports:
+     - "8000:8000"
+    command: ["/usr/bin/start-web"]
+  celery:
+    build: .
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    volumes:
+      - ./code:/web
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+    command: ["/usr/bin/start-celery"]
+

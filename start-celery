@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /web/proj/
+celery -A proj worker -l info
